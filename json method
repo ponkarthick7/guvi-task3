@@ -1,0 +1,30 @@
+function areObjectsEqual(obj1, obj2) {
+    let sortedObj1 = sortObjectProperties(obj1);
+    let sortedObj2 = sortObjectProperties(obj2);
+
+    return JSON.stringify(sortedObj1) === JSON.stringify(sortedObj2);
+}
+
+function sortObjectProperties(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        return obj;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map(sortObjectProperties);
+    }
+
+    return Object.keys(obj)
+        .sort()
+        .reduce((sorted, key) => {
+            sorted[key] = sortObjectProperties(obj[key]);
+            return sorted;
+        }, {});
+}
+
+let obj1 = { name: 'person1', age: 5 };
+let obj2 = { age: 5, name: 'person1' };
+
+let areEqual = areObjectsEqual(obj1, obj2);
+
+console.log("Are the objects equal (ignoring order)?", areEqual);
